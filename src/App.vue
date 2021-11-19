@@ -1,15 +1,52 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+
+  <div class="black-bg" v-if="modalWindow">
+    <div class="white-bg">
+      <h4>상세페이지</h4>
+      <p>상세내용</p>
+      <button @click="modalWindow=false">닫기</button>
+    </div>
+  </div>
+
+  <div class="menu">
+    <a v-for="menu in menus" :key="menu">{{menu}}</a>
+  </div>
+ 
+
+  <div v-for="(data,i) in roomData" :key="i">
+    <img :src="data.image">
+    <h4 @click="modalWindow=true">{{data.title}}</h4>
+    <p>{{data.price}} won</p>
+    <button @click="increase(i)">허위매물신고</button>
+    <span>신고수 : {{fraudReports[i]}}</span>
+  </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import data from './assets/data/oneroom';
 
 export default {
   name: 'App',
+  data(){ // 데이터 보관함 => 데이터바인딩해서 html에 적용
+    return {
+      roomData : data,
+      modalWindow : false,
+      prices : [60,100,250],
+      menus : ['Home','Products','About'],
+      products : ['역삼동원룸','천호동원룸','마포동원룸'],
+      fraudReports : [0,0,0],
+      images : [require("./assets/images/room0.jpg")
+                ,require("./assets/images/room1.jpg")
+                ,require("./assets/images/room2.jpg")]
+      
+    }
+  },
+  methods : {
+    increase(i){
+      this.fraudReports[i]++;
+    }
+  },
   components: {
-    HelloWorld
   }
 }
 </script>
@@ -22,5 +59,38 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+
+.menu{
+  background: darkslateblue;
+  padding: 15px;
+  border-radius: 5px;
+}
+
+.menu a{
+  color: white;
+  padding: 10px;
+}
+
+.room-img{
+  width : 100%;
+  margin-top:40px;
+}
+
+body{
+  margin: 0;
+}
+div{
+  box-sizing: border-box;
+}
+.black-bg{
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  position: fixed; padding: 20px;
+}
+.white-bg{
+  width: 100%; background: white;
+  border-radius: 8px;
+  padding: 20px;
 }
 </style>
